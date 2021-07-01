@@ -4,11 +4,7 @@ import enums.CustomerTypeEnum;
 import models.Booking;
 import models.Hotel;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class HotelBusiness {
 
@@ -54,67 +50,38 @@ public class HotelBusiness {
 
     public String verifyBetterCost(Booking booking) {
 
+        Map<Double, Hotel> betterCostHashMap = new HashMap<>();
 
         for (Hotel hotel: this.hotels) {
 
             Double sumOfCost = Double.valueOf(0);
 
             if(booking.getCustomerTypeEnum().equals(CustomerTypeEnum.REGULAR)) {
-
-                for (LocalDate date: booking.getBookingDates()) {
-
-                    if(isWeekDay(date)) {
-                        sumOfCost =+ hotel.getWeekdayRegularTax();
-                    } else {
-                        sumOfCost =+ hotel.getWeekendRegularTax();
-                    }
-
-                }
-
+                sumOfCost = CustomerTypeEnum.REGULAR.sumCost(booking, hotel, sumOfCost);
             } else {
-
-                for (LocalDate date: booking.getBookingDates()) {
-
-                    if(isWeekDay(date)) {
-                        sumOfCost =+ hotel.getWeekdayRewardTax();
-                    } else {
-                        sumOfCost =+ hotel.getWeekendRewardTax();
-                    }
-
-                }
-
+                sumOfCost = CustomerTypeEnum.REWARD.sumCost(booking, hotel, sumOfCost);
             }
 
-            if(this.bookingCost.equals(Double.valueOf(0))) {
-                this.betterCostHotel = hotel;
-                this.bookingCost = sumOfCost;
-            } else {
-                if(this.bookingCost > sumOfCost) {
-                    this.betterCostHotel = hotel;
-                    this.bookingCost = sumOfCost;
-                } else if (this.bookingCost.equals(sumOfCost)) {
-                    if(this.betterCostHotel.getRate() > hotel.getRate()) {
-                        this.betterCostHotel = hotel;
-                        this.bookingCost = sumOfCost;
-                    }
+            betterCostHashMap.put(sumOfCost, hotel);
+        }
+
+        return orderBetterHotelCostAndRate(betterCostHashMap).get(0).getValue().getName();
+    }
+
+    public List<Map.Entry<Double, Hotel>> orderBetterHotelCostAndRate(Map<Double, Hotel> betterCostHashMap) {
+
+        List<Map.Entry<Double, Hotel>> listOfCostAndHotels  = new ArrayList<>(betterCostHashMap.entrySet());
+        Collections.sort(listOfCostAndHotels, new Comparator<Map.Entry<Double, Hotel>>() {
+            @Override
+            public int compare(Map.Entry<Double, Hotel> o1, Map.Entry<Double, Hotel> o2) {
+                if(o1.getKey().equals(o2.getKey())) {
+                    return o1.getValue().getRate().compareTo(o2.getValue().getRate());
+                } else {
+                    return o1.getKey().compareTo(o2.getKey());
                 }
             }
-
-        }
-
-        return this.betterCostHotel.getName();
+        });
+        return listOfCostAndHotels;
     }
 
-    private boolean isWeekDay(LocalDate date) {
-
-        Date date1 = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Calendar c1 = Calendar.getInstance();
-        c1.setTime(date1);
-        if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)) {
-            return false;
-        }else {
-            return true;
-        }
-
-    }
 }
