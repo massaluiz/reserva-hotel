@@ -9,8 +9,6 @@ import java.util.*;
 public class HotelBusiness {
 
     private ArrayList<Hotel> hotels = new ArrayList<>();
-    private Hotel betterCostHotel = new Hotel();
-    private Double bookingCost = Double.valueOf(0);;
 
     public HotelBusiness() {
 
@@ -54,12 +52,12 @@ public class HotelBusiness {
 
         for (Hotel hotel: this.hotels) {
 
-            Double sumOfCost = Double.valueOf(0);
+            Double sumOfCost;
 
             if(booking.getCustomerTypeEnum().equals(CustomerTypeEnum.REGULAR)) {
-                sumOfCost = CustomerTypeEnum.REGULAR.sumCost(booking, hotel, sumOfCost);
+                sumOfCost = (hotel.getWeekdayRegularTax() * booking.getWeekDays()) + (hotel.getWeekendRegularTax() * booking.getWeekendDays());
             } else {
-                sumOfCost = CustomerTypeEnum.REWARD.sumCost(booking, hotel, sumOfCost);
+                sumOfCost = (hotel.getWeekdayRewardTax() * booking.getWeekDays()) + (hotel.getWeekendRewardTax() * booking.getWeekendDays());
             }
 
             betterCostHashMap.put(sumOfCost, hotel);

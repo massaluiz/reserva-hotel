@@ -1,17 +1,0 @@
-
-J
-java:S1066`"/Merge this if statement with the enclosing one.(ö­ö£şÿÿÿÿ
-7
-java:S1116"Remove this empty statement.(ù”›Ùıÿÿÿÿ
-h
-java:S37767"RRefactor this method to reduce its Cognitive Complexity from 31 to the 15 allowed.(œüäŒ
--
-java:S2757C"Was "+=" meant instead?(õáö”
--
-java:S2757E"Was "+=" meant instead?(¹õ¨
-,
-java:S2757O"Was "+=" meant instead?(‘æÖv
-,
-java:S2757Q"Was "+=" meant instead?(áÓ€[
-W
-java:S1126q"AReplace this if-then-else statement by a single return statement.(Ã×šë

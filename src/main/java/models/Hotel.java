@@ -1,7 +1,5 @@
 package models;
 
-import java.math.BigDecimal;
-
 public class Hotel {
 
     private String name;
