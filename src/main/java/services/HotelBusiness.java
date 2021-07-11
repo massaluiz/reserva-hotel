@@ -50,35 +50,41 @@ public class HotelBusiness {
 
         Map<Double, Hotel> betterCostHashMap = new HashMap<>();
 
-        for (Hotel hotel: this.hotels) {
-
-            Double sumOfCost;
-
-            if(booking.getCustomerTypeEnum().equals(CustomerTypeEnum.REGULAR)) {
-                sumOfCost = (hotel.getWeekdayRegularTax() * booking.getWeekDays()) + (hotel.getWeekendRegularTax() * booking.getWeekendDays());
-            } else {
-                sumOfCost = (hotel.getWeekdayRewardTax() * booking.getWeekDays()) + (hotel.getWeekendRewardTax() * booking.getWeekendDays());
-            }
-
-            betterCostHashMap.put(sumOfCost, hotel);
+        for (Hotel hotel : this.hotels) {
+            betterCostHashMap.put(sumTax(hotel, booking), hotel);
         }
 
         return orderBetterHotelCostAndRate(betterCostHashMap).get(0).getValue().getName();
     }
 
+    public Double sumTax(Hotel hotel, Booking booking) {
+
+        Double sumOfCost = Double.valueOf(0);
+
+        for (CustomerTypeEnum customerTypeEnum : CustomerTypeEnum.values()) {
+            if (booking.getCustomerTypeEnum().equals(customerTypeEnum)) {
+                sumOfCost = customerTypeEnum.sumByCustomerType(hotel, booking);
+            }
+        }
+
+        return sumOfCost;
+    }
+
     public List<Map.Entry<Double, Hotel>> orderBetterHotelCostAndRate(Map<Double, Hotel> betterCostHashMap) {
 
-        List<Map.Entry<Double, Hotel>> listOfCostAndHotels  = new ArrayList<>(betterCostHashMap.entrySet());
+        List<Map.Entry<Double, Hotel>> listOfCostAndHotels = new ArrayList<>(betterCostHashMap.entrySet());
+
         Collections.sort(listOfCostAndHotels, new Comparator<Map.Entry<Double, Hotel>>() {
             @Override
-            public int compare(Map.Entry<Double, Hotel> o1, Map.Entry<Double, Hotel> o2) {
-                if(o1.getKey().equals(o2.getKey())) {
-                    return o1.getValue().getRate().compareTo(o2.getValue().getRate());
+            public int compare(Map.Entry<Double, Hotel> actualValue, Map.Entry<Double, Hotel> nextValue) {
+                if (actualValue.getKey().equals(nextValue.getKey())) {
+                    return actualValue.getValue().getRate().compareTo(nextValue.getValue().getRate());
                 } else {
-                    return o1.getKey().compareTo(o2.getKey());
+                    return actualValue.getKey().compareTo(nextValue.getKey());
                 }
             }
         });
+
         return listOfCostAndHotels;
     }
 

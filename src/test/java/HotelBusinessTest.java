@@ -1,25 +1,24 @@
 import enums.CustomerTypeEnum;
 import models.Booking;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.HotelBusiness;
+import util.Util;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 class HotelBusinessTest {
 
-
     @Test
-    void isLakewood() {
+    void shouldReturnLakewood() throws Exception {
 
-        LocalDate date1 = LocalDate.of(2009, 03, 16);
-        LocalDate date2 = LocalDate.of(2009, 03, 17);
-        LocalDate date3 = LocalDate.of(2009, 03, 18);
+        Calendar date1 = Util.getCalendar(16, 03,2020);
+        Calendar date2 = Util.getCalendar(17, 03,2020);
+        Calendar date3 = Util.getCalendar(18, 03,2020);
 
-        ArrayList<LocalDate> bookingDates = new ArrayList<>();
+        ArrayList<Calendar> bookingDates = new ArrayList<>();
         bookingDates.add(date1);
         bookingDates.add(date2);
         bookingDates.add(date3);
@@ -32,13 +31,13 @@ class HotelBusinessTest {
     }
 
     @Test
-    void isBridgewood() {
+    void shouldReturnBridgewood() throws Exception {
 
-        LocalDate date1 = LocalDate.of(2009, 03, 20);
-        LocalDate date2 = LocalDate.of(2009, 03, 21);
-        LocalDate date3 = LocalDate.of(2009, 03, 22);
+        Calendar date1 = Util.getCalendar(20, 03,2020);
+        Calendar date2 = Util.getCalendar(21, 03,2020);
+        Calendar date3 = Util.getCalendar(22, 03,2020);
 
-        ArrayList<LocalDate> bookingDates = new ArrayList<>();
+        ArrayList<Calendar> bookingDates = new ArrayList<>();
         bookingDates.add(date1);
         bookingDates.add(date2);
         bookingDates.add(date3);
@@ -51,16 +50,37 @@ class HotelBusinessTest {
     }
 
     @Test
-    void isRidgewoodReward() {
+    void shouldReturnRidgewood() throws Exception {
 
-        LocalDate date1 = LocalDate.of(2009, 03, 26);
-        LocalDate date2 = LocalDate.of(2009, 03, 27);
-        LocalDate date3 = LocalDate.of(2009, 03, 28);
+        Calendar date1 = Util.getCalendar(26, 03,2020);
+        Calendar date2 = Util.getCalendar(27, 03,2020);
+        Calendar date3 = Util.getCalendar(28, 03,2020);
 
-        ArrayList<LocalDate> bookingDates = new ArrayList<>();
+        ArrayList<Calendar> bookingDates = new ArrayList<>();
         bookingDates.add(date1);
         bookingDates.add(date2);
         bookingDates.add(date3);
+
+        Booking booking = new Booking(CustomerTypeEnum.REWARD, bookingDates);
+
+        HotelBusiness hotelBusiness = new HotelBusiness();
+        Assertions.assertEquals("Ridgewood", hotelBusiness.verifyBetterCost(booking));
+
+    }
+
+    @Test
+    void shouldReturnRidgewoodForVipCustomerType() throws Exception {
+
+        Calendar date1 = Util.getCalendar(8, 7,2021);
+        Calendar date2 = Util.getCalendar(9, 7,2021);
+        Calendar date3 = Util.getCalendar(10, 7,2021);
+        Calendar date4 = Util.getCalendar(11, 7,2021);
+
+        ArrayList<Calendar> bookingDates = new ArrayList<>();
+        bookingDates.add(date1);
+        bookingDates.add(date2);
+        bookingDates.add(date3);
+        bookingDates.add(date4);
 
         Booking booking = new Booking(CustomerTypeEnum.REWARD, bookingDates);
 

@@ -1,18 +1,22 @@
 package enums;
 
+import models.Booking;
+import models.Hotel;
+
 public enum CustomerTypeEnum {
 
-    REGULAR("Regular"),
-    REWARD("Reward");
+    REGULAR() {
+        @Override
+        public Double sumByCustomerType(Hotel hotel, Booking booking) {
+            return (hotel.getWeekdayRegularTax() * booking.getWeekDays()) + (hotel.getWeekendRegularTax() * booking.getWeekendDays());
+        }
+    },
+    REWARD() {
+        @Override
+        public Double sumByCustomerType(Hotel hotel, Booking booking) {
+            return (hotel.getWeekdayRewardTax() * booking.getWeekDays()) + (hotel.getWeekendRewardTax() * booking.getWeekendDays());
+        }
+    };
 
-    private String descricao;
-
-    CustomerTypeEnum(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
+    public abstract Double sumByCustomerType(Hotel hotel, Booking booking);
 }
